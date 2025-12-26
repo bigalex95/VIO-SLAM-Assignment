@@ -1,0 +1,31 @@
+[93mInitialized new /root/.evo/settings.json[39m
+APE w.r.t. translation part (m)
+(with SE(3) Umeyama alignment)
+
+       max	0.125137
+      mean	0.063767
+    median	0.064558
+       min	0.005446
+      rmse	0.069196
+       sse	17.419102
+       std	0.026868
+
+Plot saved to /workspace/results/plots/mh_01_easy_ate_raw.png
+Plot saved to /workspace/results/plots/mh_01_easy_ate_map.png
+[WARNING] /workspace/results/stats/mh_01_easy_ate.zip exists, overwrite?
+enter 'y' to overwrite or any other key to cancel
+[ERROR] Unhandled error in evo.main_ape
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/evo/entry_points.py", line 97, in launch
+    main_module.run(args)
+  File "/usr/local/lib/python3.10/dist-packages/evo/main_ape.py", line 212, in run
+    file_interface.save_res_file(
+  File "/usr/local/lib/python3.10/dist-packages/evo/tools/file_interface.py", line 478, in save_res_file
+    if confirm_overwrite and not user.check_and_confirm_overwrite(
+  File "/usr/local/lib/python3.10/dist-packages/evo/tools/user.py", line 46, in check_and_confirm_overwrite
+    return confirm("enter 'y' to overwrite or any other key to cancel")
+  File "/usr/local/lib/python3.10/dist-packages/evo/tools/user.py", line 37, in confirm
+    if input(msg + "\n") != key:
+EOFError: EOF when reading a line
+
+[ERROR] evo module evo.main_ape crashed - no logfile written (disabled)

@@ -11,12 +11,29 @@ A complete Visual-Inertial Odometry (VIO) implementation and evaluation using th
 
 **Performance Highlights:**
 
-- 🎯 State-of-the-art accuracy (7cm ATE, 2-3cm RPE)
-- 🚀 2-3x better than VINS-Mono baseline
+- 🎯 State-of-the-art accuracy (7cm ATE, 2-4cm RPE)
+- 🚀 Significantly better than VINS-Mono baseline on tested sequences
 - 💪 Robust under aggressive motion (V1_03)
-- ⚙️ Production-ready with proper ADIS16448 IMU calibration
+- ⚙️ Reproducible and robust with proper ADIS16448 IMU calibration
 
 ## 🚀 Quick Start
+
+### Framework Information
+
+**Basalt VIO Framework:**
+
+- **Repository:** [VladyslavUsenko/basalt](https://github.com/VladyslavUsenko/basalt)
+- **Commit:** `9656344` (tracked as git submodule in `external/basalt/`)
+- **Build Type:** Release with Debug Info (RelWithDebInfo)
+- **Note:** The exact Basalt version is pinned via git submodule. To ensure reproducibility, the Docker build and local setup both use this specific commit.
+
+**To verify your Basalt version:**
+
+```bash
+cd external/basalt
+git log --oneline -1
+# Should show: 9656344 Merge branch 'remove_rs2_pangolin_headers' into 'master'
+```
 
 ### Prerequisites
 
@@ -190,8 +207,8 @@ All evaluation plots are in [results/evaluation/](results/evaluation/):
 
 **Performance vs VINS-Mono:**
 
-- 2.3x better on MH_01_easy
-- 5.6x better on V1_03_difficult
+- 2.3x better on MH_01_easy (0.16 / 0.069 ≈ 2.3)
+- 5.6x better on V1_03_difficult (0.30 / 0.054 ≈ 5.6)
 
 ## 🔧 Configuration
 
@@ -374,8 +391,8 @@ volumes:
 
 | ATE RMSE    | Assessment   | Use Case                         |
 | ----------- | ------------ | -------------------------------- |
-| < 0.10 m    | ✅ Excellent | Production-ready                 |
-| 0.10-0.20 m | ⚠️ Good      | Acceptable for most applications |
+| < 0.10 m    | ✅ Excellent | Research and robotics            |
+| 0.10-0.20 m | ⚠️ Good      | Acceptable for many applications |
 | 0.20-0.50 m | ⚠️ Fair      | Needs improvement                |
 | > 0.50 m    | ❌ Poor      | Not suitable                     |
 
@@ -526,6 +543,69 @@ head data/MH_01_easy/mav0/state_groundtruth_estimate0/data.csv
 chmod +x scripts/*.sh
 sudo chown -R $USER:$USER data/ results/
 ```
+
+## ⚠️ Assumptions & Limitations
+
+### Current Scope
+
+**Tested Datasets:**
+
+- ✅ EuRoC MAV (MH_01_easy, V1_03_difficult)
+- ❌ Not yet tested on TUM-VI, UZH-FPV, or custom datasets
+
+**System Configuration:**
+
+- ✅ Stereo VIO with IMU (ADIS16448-grade sensor)
+- ❌ VIO-only (no loop closure, relocalization, or global optimization)
+- ❌ Monocular configurations not validated
+
+**Environment:**
+
+- ✅ Indoor environments with good lighting and texture
+- ⚠️ Outdoor performance not validated
+- ❌ Not tested in low-light, featureless, or highly dynamic scenes
+
+### Known Limitations
+
+1. **Long-term Drift:** VIO-only system accumulates drift over extended missions (>10 minutes)
+
+   - Mitigation: Add loop closure or global optimization for longer sequences
+
+2. **Feature Tracking:** Performance degrades in challenging visual conditions
+
+   - Motion blur during fast movements
+   - Featureless environments (walls, uniform textures)
+   - Lighting changes or overexposure
+
+3. **IMU Requirements:** Requires IMU-grade sensor (MEMS acceptable, consumer-grade may struggle)
+
+   - Proper calibration essential (noise parameters, biases)
+   - Time synchronization with camera critical (<2ms jitter)
+
+4. **Computational Cost:** Real-time performance depends on hardware
+
+   - Development tested on desktop CPU
+   - Embedded deployment may require optimization or GPU acceleration
+
+5. **Scale Observability:** Stereo provides metric scale naturally
+   - Monocular VIO would require scale initialization or external reference
+
+### Recommended Use Cases
+
+**Suitable:**
+
+- Short to medium duration missions (<10 minutes)
+- Indoor and structured environments
+- Robotics research and benchmarking
+- Visual-inertial odometry frontend for SLAM systems
+- Augmented reality tracking in controlled settings
+
+**Not Recommended Without Modifications:**
+
+- GPS-denied long-term autonomous navigation
+- Safety-critical applications without redundancy
+- Production deployment without additional validation
+- Environments with frequent tracking loss
 
 ## 📖 Citation
 
