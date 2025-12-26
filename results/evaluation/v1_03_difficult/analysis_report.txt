@@ -4,15 +4,15 @@ Dataset: V1_03_difficult
 
 TOP 5 WORST TRACKING MOMENTS:
 ----------------------------------------
-Timestamp: 1403715989.034 (Time from start: 100.65s) --> Error: 0.1042 m
-Timestamp: 1403715989.084 (Time from start: 100.70s) --> Error: 0.1041 m
-Timestamp: 1403715988.984 (Time from start: 100.60s) --> Error: 0.1040 m
-Timestamp: 1403715989.134 (Time from start: 100.75s) --> Error: 0.1039 m
-Timestamp: 1403715988.934 (Time from start: 100.55s) --> Error: 0.1039 m
+Timestamp: 1403715989.034 (Time from start: 100.65s) --> Error: 0.1038 m
+Timestamp: 1403715989.084 (Time from start: 100.70s) --> Error: 0.1038 m
+Timestamp: 1403715989.134 (Time from start: 100.75s) --> Error: 0.1036 m
+Timestamp: 1403715989.434 (Time from start: 101.05s) --> Error: 0.1036 m
+Timestamp: 1403715989.484 (Time from start: 101.10s) --> Error: 0.1036 m
 
 AUTOMATED DIAGNOSIS:
 ----------------------------------------
-Max Error: 0.1042 m
+Max Error: 0.1038 m
 RMSE:      0.0536 m
 
 CONCLUSION: STABLE.

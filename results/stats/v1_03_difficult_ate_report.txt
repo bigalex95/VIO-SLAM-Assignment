@@ -1,0 +1,13 @@
+APE w.r.t. translation part (m)
+(with SE(3) Umeyama alignment)
+
+       max	0.103812
+      mean	0.050128
+    median	0.046596
+       min	0.010715
+      rmse	0.053562
+       sse	6.007506
+       std	0.018871
+
+Plot saved to /workspace/results/plots/v1_03_difficult_ate_raw.png
+Plot saved to /workspace/results/plots/v1_03_difficult_ate_map.png

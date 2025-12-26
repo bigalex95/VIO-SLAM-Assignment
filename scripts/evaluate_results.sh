@@ -63,6 +63,10 @@ evaluate_sequence() {
 
     echo -e "${BLUE}[1/2] Calculating Absolute Trajectory Error (ATE - RMSE)...${NC}"
     
+    # Remove previous results to avoid overwrite prompts
+    rm -f "${ATE_PLOT}" "${ATE_ZIP}" "${STATS_DIR}/${SEQUENCE_NAME}_ate_report.txt"
+    rm -f "${PLOTS_DIR}/${SEQUENCE_NAME}_ate"*.png
+
     # Run EVO APE (Absolute Pose Error)
     # REMOVED --no_show, ADDED --save_plot which usually suppresses window in Agg mode
     evo_ape euroc "${GT_PATH}" "${TRAJ_FILE}" \
@@ -78,6 +82,10 @@ evaluate_sequence() {
 
     echo ""
     echo -e "${BLUE}[2/2] Calculating Relative Pose Error (RPE - Drift)...${NC}"
+
+    # Remove previous results to avoid overwrite prompts
+    rm -f "${RPE_PLOT}" "${RPE_ZIP}" "${STATS_DIR}/${SEQUENCE_NAME}_rpe_report.txt"
+    rm -f "${PLOTS_DIR}/${SEQUENCE_NAME}_rpe"*.png
 
     # Run EVO RPE (Relative Pose Error)
     evo_rpe euroc "${GT_PATH}" "${TRAJ_FILE}" \

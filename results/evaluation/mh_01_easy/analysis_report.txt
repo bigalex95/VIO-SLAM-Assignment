@@ -5,7 +5,7 @@ Dataset: MH_01_easy
 TOP 5 WORST TRACKING MOMENTS:
 ----------------------------------------
 Timestamp: 1403636711.964 (Time from start: 131.10s) --> Error: 0.1253 m
-Timestamp: 1403636712.014 (Time from start: 131.15s) --> Error: 0.1245 m
+Timestamp: 1403636712.014 (Time from start: 131.15s) --> Error: 0.1246 m
 Timestamp: 1403636712.064 (Time from start: 131.20s) --> Error: 0.1235 m
 Timestamp: 1403636711.914 (Time from start: 131.05s) --> Error: 0.1233 m
 Timestamp: 1403636711.864 (Time from start: 131.00s) --> Error: 0.1227 m

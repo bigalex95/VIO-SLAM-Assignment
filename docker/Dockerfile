@@ -133,7 +133,7 @@ RUN echo '#!/bin/bash\n\
     echo "Step 3: Running detailed evaluation (Python)..."\n\
     echo "========================================"\n\
     if [ -f "/workspace/scripts/evaluate_trajectories.py" ]; then\n\
-    python3 /workspace/scripts/evaluate_trajectories.py --all\n\
+    python3 /workspace/scripts/evaluate_trajectories.py --dataset all\n\
     echo "✅ Detailed evaluation completed"\n\
     else\n\
     echo "⚠️  Python evaluation script not found, skipping..."\n\
