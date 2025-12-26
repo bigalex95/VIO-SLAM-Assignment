@@ -2,13 +2,14 @@ import markdown
 from weasyprint import HTML
 import os
 
+
 def generate_pdf(input_md, output_pdf):
     print(f"Reading {input_md}...")
-    with open(input_md, 'r', encoding='utf-8') as f:
+    with open(input_md, "r", encoding="utf-8") as f:
         text = f.read()
 
     print("Converting Markdown to HTML...")
-    html_content = markdown.markdown(text, extensions=['tables', 'fenced_code'])
+    html_content = markdown.markdown(text, extensions=["tables", "fenced_code"])
 
     # Add some basic styling
     styled_html = f"""
@@ -37,9 +38,10 @@ def generate_pdf(input_md, output_pdf):
     HTML(string=styled_html, base_url=os.path.dirname(input_md)).write_pdf(output_pdf)
     print("Done.")
 
+
 if __name__ == "__main__":
     workspace_root = "/home/bigalex95/Projects/challenges/VIO-SLAM-Assignment"
     input_path = os.path.join(workspace_root, "docs/technical_report.md")
     output_path = os.path.join(workspace_root, "docs/technical_report.pdf")
-    
+
     generate_pdf(input_path, output_path)
