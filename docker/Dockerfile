@@ -63,35 +63,28 @@ RUN cmake -B build -G Ninja \
 # 3. Install Evo for evaluation
 RUN pip3 install evo --upgrade --no-binary evo
 
-# 4. Setup Workspace
+# 4. Clone and Build Basalt FIRST (for better caching)
 WORKDIR /workspace
+RUN mkdir -p /workspace/external && \
+    git clone --recursive https://gitlab.com/VladyslavUsenko/basalt.git /workspace/external/basalt
 
-# 5. Copy project files (excluding external/basalt)
+WORKDIR /workspace/external/basalt
+RUN cmake -B build \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    && cmake --build build -j8
+
+# 5. Install Python dependencies (cached unless requirements.txt changes)
+WORKDIR /workspace
+COPY requirements.txt /workspace/
+RUN pip3 install -r requirements.txt
+
+# 6. Copy project files (these change frequently, so keep at end)
 COPY configs/ /workspace/configs/
 COPY scripts/ /workspace/scripts/
 COPY docs/ /workspace/docs/
 COPY README.md LICENSE /workspace/
 
-# 6. Clone and Build Basalt (using official installation)
-RUN mkdir -p /workspace/external && \
-    git clone --recursive https://gitlab.com/VladyslavUsenko/basalt.git /workspace/external/basalt
-
-WORKDIR /workspace/external/basalt
-RUN ./scripts/install_deps.sh
-
-# Re-install CMake 3.27 (install_deps.sh installs 3.22 from apt)
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.sh -O /tmp/cmake.sh && \
-    chmod +x /tmp/cmake.sh && \
-    /tmp/cmake.sh --prefix=/usr/local --skip-license && \
-    rm /tmp/cmake.sh
-
-# Build Basalt
-RUN cmake -B build \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    && cmake --build build -j8
-
 # 7. Make scripts executable
-WORKDIR /workspace
 RUN chmod +x /workspace/scripts/*.sh
 
 # 8. Create entrypoint script
@@ -126,13 +119,24 @@ RUN echo '#!/bin/bash\n\
     \n\
     # Run evaluation\n\
     echo ""\n\
-    echo "Step 2: Evaluating results..."\n\
+    echo "Step 2: Evaluating results (basic evo)..."\n\
     echo "========================================"\n\
     if [ -f "/workspace/scripts/evaluate_results.sh" ]; then\n\
     /workspace/scripts/evaluate_results.sh\n\
-    echo "✅ Evaluation completed"\n\
+    echo "✅ Basic evaluation completed"\n\
     else\n\
-    echo "⚠️  Evaluation script not found, skipping..."\n\
+    echo "⚠️  Basic evaluation script not found, skipping..."\n\
+    fi\n\
+    \n\
+    # Run detailed Python evaluation\n\
+    echo ""\n\
+    echo "Step 3: Running detailed evaluation (Python)..."\n\
+    echo "========================================"\n\
+    if [ -f "/workspace/scripts/evaluate_trajectories.py" ]; then\n\
+    python3 /workspace/scripts/evaluate_trajectories.py --all\n\
+    echo "✅ Detailed evaluation completed"\n\
+    else\n\
+    echo "⚠️  Python evaluation script not found, skipping..."\n\
     fi\n\
     \n\
     # Summary\n\

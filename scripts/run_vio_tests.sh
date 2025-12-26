@@ -3,10 +3,27 @@
 # BASALT VIO Test Execution Script - Phase B
 # Runs Visual-Inertial Odometry on EuRoC datasets and saves trajectories
 #
-# Usage: ./scripts/run_vio_tests.sh
+# Usage: ./scripts/run_vio_tests.sh [--gui]
+#   --gui    Enable GUI visualization (default: off)
 #
 
 set -e  # Exit on error
+
+# Parse command line arguments
+SHOW_GUI=0
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --gui)
+            SHOW_GUI=1
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--gui]"
+            exit 1
+            ;;
+    esac
+done
 
 # Color output
 RED='\033[0;31m'
@@ -31,6 +48,7 @@ mkdir -p "${RESULTS_DIR}/plots"
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}BASALT VIO - Phase B Dataset Testing${NC}"
 echo -e "${GREEN}========================================${NC}"
+echo -e "GUI Mode: ${YELLOW}$([ ${SHOW_GUI} -eq 1 ] && echo 'ENABLED' || echo 'DISABLED')${NC}"
 echo ""
 
 # Check if BASALT VIO executable exists
@@ -77,7 +95,7 @@ run_vio_test() {
         --dataset-type euroc \
         --cam-calib "${CALIB_FILE}" \
         --config-path "${CONFIG_FILE}" \
-        --show-gui 0 \
+        --show-gui ${SHOW_GUI} \
         --use-imu 1 \
         --marg-data "${MARG_DIR}" \
         --save-trajectory tum \
@@ -145,5 +163,7 @@ echo "  Ground truth: ${RESULTS_DIR}/groundtruth/"
 echo "  Statistics:   ${RESULTS_DIR}/stats/"
 echo ""
 echo "Next: Phase C - Run evaluation with evo toolkit"
-echo "  Example: evo_ape euroc gt_mh_01_easy.csv traj_mh_01_easy_tum.txt --align --plot"
+echo "  Example: python3 ./scripts/evaluate_trajectories.py"
+echo ""
+echo "To run with GUI enabled, use: ./scripts/run_vio_tests.sh --gui"
 echo ""

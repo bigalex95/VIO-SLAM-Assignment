@@ -55,10 +55,21 @@ RUN cmake -B build -G Ninja \
     && cmake --install build \
     && cd /tmp && rm -rf Pangolin
 
-# 3. Install Evo for evaluation
-RUN pip3 install evo --upgrade --no-binary evo
+# 3. Setup Workspace
+WORKDIR /workspace
 
-# 4. Setup Workspace
+# 4. Copy and install Python dependencies
+COPY requirements.txt /workspace/
+RUN pip3 install -r requirements.txt
+
+# 5. Build Basalt (deps already installed above)
+COPY external/basalt /workspace/external/basalt
+WORKDIR /workspace/external/basalt
+RUN mkdir -p build && \
+    cd build && \
+    cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
+    make -j8
+
 WORKDIR /workspace
 
 CMD ["/bin/bash"]

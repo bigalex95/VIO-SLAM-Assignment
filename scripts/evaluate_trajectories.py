@@ -6,6 +6,10 @@ Evaluate VIO trajectories against ground truth using the evo package.
 
 import os
 import sys
+
+# Set matplotlib backend BEFORE any other imports
+os.environ['MPLBACKEND'] = 'Agg'
+
 import argparse
 import copy
 import pandas as pd
@@ -19,7 +23,6 @@ from evo.core import lie_algebra as lie
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
-from evo.tools import plot
 
 # Define colors for consistency
 COLORS = {
