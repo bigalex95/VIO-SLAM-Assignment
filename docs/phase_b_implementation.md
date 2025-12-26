@@ -3,6 +3,7 @@
 ## 1. Framework Setup Overview
 
 ### Selected Framework: BASALT VIO
+
 - **Version:** Latest from GitHub (commit-based)
 - **License:** BSD 3-Clause
 - **Repository:** https://gitlab.com/VladyslavUsenko/basalt
@@ -18,17 +19,21 @@ The implementation uses Docker for reproducible deployment across different plat
 #### Dockerfile Analysis
 
 **Base Image:** Ubuntu 22.04 LTS
+
 - Modern stable platform
 - Good package availability
 - Compatible with Jetson platforms (ARM64 builds available)
 
 **Key Dependencies Installed:**
+
 1. **Build Tools:**
+
    - GCC/G++ (build-essential)
    - CMake 3.22+
    - Ninja build system for faster compilation
 
 2. **Required Libraries:**
+
    - **TBB (Threading Building Blocks):** Parallel computation
    - **Eigen3:** Linear algebra (3.4.0+)
    - **OpenCV:** Image processing and feature detection
@@ -36,6 +41,7 @@ The implementation uses Docker for reproducible deployment across different plat
    - **fmt:** Modern C++ formatting library
 
 3. **Visualization:**
+
    - **Pangolin:** Built from source for GUI and 3D visualization
    - OpenGL libraries for rendering
 
@@ -44,12 +50,14 @@ The implementation uses Docker for reproducible deployment across different plat
    - Installed via pip3 (no binary for latest version)
 
 #### Docker Build Command
+
 ```bash
 cd /workspace/docker
 docker build -t basalt-vio:latest .
 ```
 
 #### Docker Run Command
+
 ```bash
 docker run -it --rm \
   -v /workspace:/workspace \
@@ -60,6 +68,7 @@ docker run -it --rm \
 ```
 
 **Environment Variables:**
+
 - `DISPLAY`: X11 forwarding for GUI visualization
 - `DEBIAN_FRONTEND=noninteractive`: Automated apt installation
 
@@ -72,11 +81,13 @@ docker run -it --rm \
 **Build System:** CMake with Ninja generator
 
 **Build Type:** Release
+
 - Optimization flags: -O3 -march=native
 - Debug symbols stripped for smaller binary size
 - Vectorization enabled (SSE/AVX on x86, NEON on ARM)
 
 **Compilation Process:**
+
 ```bash
 cd /workspace/external/basalt
 mkdir -p build
@@ -95,6 +106,7 @@ ninja -j$(nproc)
 ### 3.2 Generated Executables
 
 Key binaries produced:
+
 1. **basalt_vio**: Main Visual-Inertial Odometry executable
 2. **basalt_calibrate**: Camera-IMU calibration tool
 3. **basalt_opt_flow**: Optical flow visualization
@@ -109,7 +121,9 @@ Location: `/workspace/external/basalt/build/`
 ### 4.1 EuRoC MAV Dataset
 
 **Selected Sequences:**
+
 1. **MH_01_easy** (Machine Hall 01 - Easy)
+
    - Duration: 182 seconds
    - Trajectory length: ~80 meters
    - Characteristics: Moderate motion, good lighting, textured environment
@@ -117,11 +131,12 @@ Location: `/workspace/external/basalt/build/`
 
 2. **V1_03_difficult** (Vicon Room 1_03 - Difficult)
    - Duration: 105 seconds
-   - Trajectory length: ~50 meters  
+   - Trajectory length: ~50 meters
    - Characteristics: Fast motion, aggressive rotations, challenging for VIO
    - Purpose: Stress testing and robustness evaluation
 
 **Dataset Structure:**
+
 ```
 data/
 ├── MH_01_easy/
@@ -147,6 +162,7 @@ data/
 From `/workspace/data/MH_01_easy/mav0/imu0/sensor.yaml`:
 
 **Noise Parameters (Manufacturer Specifications):**
+
 - **Gyroscope Noise Density:** 1.6968e-04 rad/s/√Hz
 - **Gyroscope Random Walk:** 1.9393e-05 rad/s²/√Hz
 - **Accelerometer Noise Density:** 2.0000e-03 m/s²/√Hz
@@ -160,18 +176,21 @@ From `/workspace/data/MH_01_easy/mav0/imu0/sensor.yaml`:
 #### Custom Tuning Applied:
 
 **1. IMU Noise Standard Deviations:**
+
 ```json
 "accel_noise_std": [0.016, 0.016, 0.016],
 "gyro_noise_std": [0.000282, 0.000282, 0.000282]
 ```
 
 **Calculation:**
+
 - Accel noise std = noise_density × √(sample_rate) = 0.002 × √200 ≈ 0.028
 - Adjusted to 0.016 based on empirical testing (slightly conservative)
 - Gyro noise std = 0.00016968 × √200 ≈ 0.0024
 - Adjusted to 0.000282 (tuned for stability)
 
 **2. IMU Bias Standard Deviations:**
+
 ```json
 "accel_bias_std": [0.001, 0.001, 0.001],
 "gyro_bias_std": [0.0001, 0.0001, 0.0001]
@@ -180,6 +199,7 @@ From `/workspace/data/MH_01_easy/mav0/imu0/sensor.yaml`:
 **Rationale:** Conservative bias evolution model prevents bias divergence
 
 **3. Camera-IMU Extrinsics:**
+
 ```json
 "T_imu_cam": [
   {
@@ -197,17 +217,22 @@ From `/workspace/data/MH_01_easy/mav0/imu0/sensor.yaml`:
 **Validation:** Verified with basalt_calibrate tool
 
 **4. Camera Intrinsics:**
+
 - **Model:** Double Sphere (DS) - handles wide-angle distortion
 - **Resolution:** 752x480 pixels
 - **Focal Length:** ~350 pixels (moderate FOV)
 
 **5. Temporal Calibration:**
+
 ```json
 "cam_time_offset_ns": 0,
 "mocap_to_imu_offset_ns": 140763258159875
 ```
 
-**Critical:** Proper time synchronization prevents integration drift
+**Critical:** Proper time synchronization prevents integration drift.
+
+- **Note:** EuRoC sensors are hardware-synchronized; we assume zero time offset (`cam_time_offset_ns: 0`).
+- **Provenance:** Camera intrinsics and extrinsics were taken from the official EuRoC calibration files (`cam_april/cam_chain.yaml`) and verified against the Basalt example configuration.
 
 ---
 
@@ -225,6 +250,7 @@ From `/workspace/external/basalt/data/euroc_config.json`:
 ```
 
 **Explanation:**
+
 - **Grid size 50:** Ensures feature distribution across image
 - **5 iterations:** Balance between accuracy and speed
 - **3 pyramid levels:** Multi-scale tracking for large motions
@@ -239,6 +265,7 @@ From `/workspace/external/basalt/data/euroc_config.json`:
 ```
 
 **Key Parameters:**
+
 - **max_states = 3:** Sliding window size (computational vs accuracy tradeoff)
 - **max_kfs = 7:** Keyframe buffer for optimization
 - **obs_std_dev = 0.5:** Observation uncertainty (pixels)
@@ -275,6 +302,7 @@ cd /workspace/external/basalt/build
 ```
 
 **Command Breakdown:**
+
 - `--dataset-path`: Root directory of EuRoC sequence
 - `--cam-calib`: Camera-IMU calibration file (custom tuned)
 - `--dataset-type`: Data format parser (euroc vs tumvi vs kitti)
@@ -289,12 +317,14 @@ cd /workspace/external/basalt/build
 ### 8.1 Output Files
 
 **Trajectory Files:**
+
 - `/workspace/results/trajectories/traj_mh_01_easy.csv`
 - `/workspace/results/trajectories/traj_v1_03_difficult.csv`
 
 **Format:** TUM trajectory format (timestamp, tx, ty, tz, qx, qy, qz, qw)
 
 **Statistics Files:**
+
 - `/workspace/results/stats/stats_vio_*.ubjson` - VIO-specific stats
 - `/workspace/results/stats/stats_all_*.ubjson` - Complete system stats
 - `/workspace/results/stats/result_*.json` - Summary metrics
@@ -302,11 +332,13 @@ cd /workspace/external/basalt/build
 ### 8.2 Preliminary Results
 
 **MH_01_easy:**
+
 - Frames processed: 3,682
 - Execution time: 65.05 seconds
 - RMS ATE: 0.0656 meters
 
 **V1_03_difficult:**
+
 - Processing completed successfully
 - More challenging due to aggressive motion
 
@@ -330,16 +362,19 @@ cd /workspace/external/basalt/build
 ### For Production Deployment on Jetson Xavier NX:
 
 **1. Cross-compilation:**
+
 ```bash
 docker buildx build --platform linux/arm64 -t basalt-vio:arm64 .
 ```
 
 **2. Performance optimizations:**
+
 - Enable CUDA for optical flow (Jetson GPU acceleration)
 - Reduce `vio_max_kfs` to 5 for lower memory usage
 - Use `config.vio_enforce_realtime = true`
 
 **3. Power management:**
+
 - Monitor thermal throttling
 - Adjust CPU governor to performance mode
 - Cap frame rate if necessary

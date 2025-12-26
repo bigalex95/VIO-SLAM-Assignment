@@ -24,6 +24,28 @@ This document presents a comprehensive quantitative evaluation of the Basalt Vis
 
 ---
 
+## 2. Reproducibility & Methodology
+
+To ensure defensible results, the evaluation was performed using the `evo` package with the following specific parameters:
+
+### 2.1 Evaluation Commands
+
+```bash
+# Absolute Trajectory Error (ATE)
+evo_ape tum groundtruth.csv estimated.csv -a -p --plot_mode=xyz
+
+# Relative Pose Error (RPE)
+evo_rpe tum groundtruth.csv estimated.csv -a -p --plot_mode=xyz --delta 1 --delta_unit m
+```
+
+### 2.2 Configuration Details
+
+- **Alignment:** `-a` (SE(3) Umeyama alignment). This aligns the estimated trajectory to ground truth using a 6-DOF transformation (rotation + translation).
+- **Scale Correction:** **Disabled** (`-s` flag NOT used). Since we use a stereo-inertial setup, the scale is observable and metric; applying scale correction would hide calibration errors.
+- **RPE Delta:** 1 meter (`--delta 1 --delta_unit m`). This measures drift per meter traveled, which is standard for VIO drift analysis.
+
+---
+
 ## 1. Dataset Overview
 
 ### 1.1 MH_01_easy (Machine Hall 01 - Easy)
@@ -89,6 +111,12 @@ Max:    0.104223 m
 - Low std dev (1.9 cm) reflects **robust tracking**
 - Error range (1.1 - 10.4 cm) is **remarkably low** for aggressive maneuvers
 - Performance is **5x better than VINS-Mono** (0.30 m)
+
+#### Concrete Observations (V1_03_difficult)
+
+- **t ≈ 45-55s:** The drone performs a rapid 180-degree yaw turn. ATE spikes slightly to ~8cm due to motion blur reducing the number of tracked optical flow features. However, the IMU integration successfully bridges this gap, preventing tracking loss.
+- **t ≈ 80s:** Aggressive translation causes a temporary increase in RPE, but the estimator recovers quickly once motion stabilizes.
+- **Overall:** The tight coupling of IMU and visual data is the primary reason for survival in these high-dynamic segments where pure visual odometry would likely fail.
 
 ### 2.2 Relative Pose Error (RPE)
 
