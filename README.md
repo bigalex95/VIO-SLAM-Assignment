@@ -16,7 +16,13 @@ A complete Visual-Inertial Odometry (VIO) implementation and evaluation using th
 - 💪 Robust under aggressive motion (V1_03)
 - ⚙️ Reproducible and robust with proper ADIS16448 IMU calibration
 
-## 🚀 Quick Start
+## � Visual Proof
+
+![VIO System Output](results/visual_proof.png)
+
+_Figure: Snapshot of the VIO system running on MH_01_easy dataset. Left: Camera input with tracking status. Right: Real-time trajectory estimation (Blue) vs Start point (Green)._
+
+## �🚀 Quick Start
 
 ### Framework Information
 
