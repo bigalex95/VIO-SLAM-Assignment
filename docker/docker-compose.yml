@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Development container - for interactive work (use: docker-compose run --rm dev)
+  dev:
+    profiles: ["dev"]
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    container_name: vio-slam-dev
+    volumes:
+      - ..:/workspace
+      - ../data:/workspace/data
+      - ../results:/workspace/results
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: host
+    command: /bin/bash
+
+  # Production container - runs full pipeline automatically
+  run:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: vio-slam-run
+    volumes:
+      - ../data:/workspace/data
+      - ../results:/workspace/results
+    working_dir: /workspace
+    environment:
+      - MPLBACKEND=Agg
+      - KEEP_RUNNING=false

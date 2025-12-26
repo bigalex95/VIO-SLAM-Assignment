@@ -1,0 +1,33 @@
+{
+  "name": "Basalt VIO Dev",
+  "build": {
+    "dockerfile": "../docker/Dockerfile.dev",
+    "context": ".."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  // Включаем поддержку GPU (если у вас Nvidia) и GUI
+  "runArgs": [
+    "--net=host",
+    "--ipc=host",
+    "--env=DISPLAY=${localEnv:DISPLAY}",
+    "--volume=/tmp/.X11-unix:/tmp/.X11-unix:rw",
+    "--privileged",
+    "--cpus=4",
+    "--memory=6g",
+    "--gpus=all"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "ms-python.python",
+        "mhutchie.git-graph"
+      ]
+    }
+  },
+  // Basalt рекомендует работать от root в контейнере, чтобы не было проблем с правами на запись в /usr/local
+  "remoteUser": "root"
+}

@@ -1,0 +1,25 @@
+{
+  "dataset": "MH_01_easy",
+  "trajectory_file": "/workspace/results/trajectories/traj_mh_01_easy.csv",
+  "groundtruth_file": "/workspace/data/MH_01_easy/mav0/state_groundtruth_estimate0/data.csv",
+  "num_poses_original_gt": 36381,
+  "num_poses_original_est": 3681,
+  "num_poses_synchronized": 3638,
+  "duration_seconds": 181.85000014305115,
+  "ate": {
+    "rmse": 0.06920324808264394,
+    "mean": 0.06378034427010475,
+    "median": 0.06459042211237867,
+    "std": 0.02685437077972372,
+    "min": 0.005418984858724138,
+    "max": 0.1252578688841609
+  },
+  "rpe": {
+    "rmse": 0.022670899911804068,
+    "mean": 0.02089481186034756,
+    "median": 0.020211036910457825,
+    "std": 0.00879639358667611,
+    "min": 0.004394864446679244,
+    "max": 0.04551339756934209
+  }
+}

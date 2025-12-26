@@ -1,41 +1,197 @@
-# Prerequisites
-*.d
+# ==============================================================================
+# VIO-SLAM Assignment - Git Ignore Configuration
+# ==============================================================================
 
-# Compiled Object files
+# ==============================================================================
+# Large Datasets - Do NOT commit to repository
+# ==============================================================================
+data/
+data/*
+*.zip
+*.tar.gz
+*.bag
+
+# ==============================================================================
+# Build Artifacts & Compiled Code
+# ==============================================================================
+
+# C/C++ Build Outputs
+*.d
 *.slo
 *.lo
 *.o
 *.obj
-
-# Precompiled Headers
 *.gch
 *.pch
-
-# Linker files
 *.ilk
-
-# Debugger Files
 *.pdb
-
-# Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
 *.lai
 *.la
 *.a
 *.lib
-
-# Executables
 *.exe
 *.out
 *.app
-
-# debug information files
 *.dwo
+
+# CMake Build Directories
+build/
+Build/
+BUILD/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Basalt Framework (external dependency)
+external/basalt/
+external/*/build/
+external/*/Build/
+
+# ==============================================================================
+# Results & Generated Outputs
+# ==============================================================================
+
+# Trajectory Files
+results/trajectories/*.csv
+results/trajectories/*.txt
+
+# Statistics Files (large binary files)
+results/stats/*.ubjson
+results/marg_data/*
+
+# Keep evaluation plots and JSON summaries (small, important for documentation)
+# results/evaluation/  - Keep this for documentation
+# results/stats/*.json - Keep summaries
+
+# ==============================================================================
+# Python
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+*.egg
+
+# ==============================================================================
+# IDEs & Editors
+# ==============================================================================
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (PyCharm, CLion, etc.)
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Vim
+*.swp
+*.swo
+*~
+.*.swp
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ==============================================================================
+# Docker
+# ==============================================================================
+.dockerignore
+
+# ==============================================================================
+# Operating System Files
+# ==============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ==============================================================================
+# Logs & Temporary Files
+# ==============================================================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+logs/
+tmp/
+temp/
+
+# ==============================================================================
+# Old/Backup Files (user-generated)
+# ==============================================================================
+*_OLD.*
+*_BACKUP.*
+*.old
+*.backup
+
+# ==============================================================================
+# Keep Important Files
+# ==============================================================================
+
+# Keep essential configuration files
+!configs/*.json
+
+# Keep documentation and small result summaries
+!results/evaluation/*.json
+!results/evaluation/README.md
+!results/evaluation/**/*.png
+!results/stats/*.json
+
+# Keep scripts
+!scripts/*.sh
+!scripts/*.py
+
+# Keep Docker configurations
+!docker/Dockerfile*
+!docker/docker-compose.yml
+!docker/README.md

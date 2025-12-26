@@ -1,0 +1,3 @@
+[submodule "external/basalt"]
+	path = external/basalt
+	url = https://github.com/VladyslavUsenko/basalt

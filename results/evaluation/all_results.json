@@ -1,0 +1,52 @@
+[
+  {
+    "dataset": "MH_01_easy",
+    "trajectory_file": "/workspace/results/trajectories/traj_mh_01_easy.csv",
+    "groundtruth_file": "/workspace/data/MH_01_easy/mav0/state_groundtruth_estimate0/data.csv",
+    "num_poses_original_gt": 36381,
+    "num_poses_original_est": 3681,
+    "num_poses_synchronized": 3638,
+    "duration_seconds": 181.85000014305115,
+    "ate": {
+      "rmse": 0.06920324808264394,
+      "mean": 0.06378034427010475,
+      "median": 0.06459042211237867,
+      "std": 0.02685437077972372,
+      "min": 0.005418984858724138,
+      "max": 0.1252578688841609
+    },
+    "rpe": {
+      "rmse": 0.022670899911804068,
+      "mean": 0.02089481186034756,
+      "median": 0.020211036910457825,
+      "std": 0.00879639358667611,
+      "min": 0.004394864446679244,
+      "max": 0.04551339756934209
+    }
+  },
+  {
+    "dataset": "V1_03_difficult",
+    "trajectory_file": "/workspace/results/trajectories/traj_v1_03_difficult.csv",
+    "groundtruth_file": "/workspace/data/V1_03_difficult/mav0/state_groundtruth_estimate0/data.csv",
+    "num_poses_original_gt": 20931,
+    "num_poses_original_est": 2148,
+    "num_poses_synchronized": 2094,
+    "duration_seconds": 104.65000009536743,
+    "ate": {
+      "rmse": 0.05357685382517944,
+      "mean": 0.0501363420842293,
+      "median": 0.04667202441437073,
+      "std": 0.01888985093159242,
+      "min": 0.010695237378908403,
+      "max": 0.10422293179205065
+    },
+    "rpe": {
+      "rmse": 0.034552810921140896,
+      "mean": 0.03209089630962631,
+      "median": 0.032028305906879266,
+      "std": 0.012809024810535944,
+      "min": 0.009352775164460548,
+      "max": 0.0759039014570099
+    }
+  }
+]
